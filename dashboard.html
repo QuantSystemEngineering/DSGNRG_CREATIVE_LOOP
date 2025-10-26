@@ -1,0 +1,2865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Loop Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Mononoki:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Mononoki', 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            color: #e4e4e7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-family: 'Orbitron', 'Arial', sans-serif;
+            font-weight: 900;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #4ecdc4;
+            letter-spacing: 2px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            color: #4ecdc4;
+            font-size: 1.2em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-section {
+            margin-top: 15px;
+        }
+        
+        .progress-item {
+            margin-bottom: 10px;
+        }
+        
+        .progress-item label {
+            display: block;
+            color: #a1a1aa;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #45b7d1;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #a1a1aa;
+            margin-top: 5px;
+        }
+        
+        .loop-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .status-indicator {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .complete {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .incomplete {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            font-family: 'Mononoki', 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .timeline {
+            margin-top: 30px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .timeline-date {
+            min-width: 100px;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            margin-left: 20px;
+        }
+        
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        .input-forms {
+            margin: 30px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e4e4e7;
+            font-family: 'Mononoki', 'Courier New', monospace;
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #a1a1aa;
+        }
+        
+        .file-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        
+        .file-input-group input[type="text"],
+        .file-input-group textarea {
+            flex: 1;
+        }
+        
+        .file-browse-btn {
+            padding: 12px 20px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            margin: 0;
+        }
+        
+        .drop-zone {
+            flex: 1;
+            position: relative;
+            border: 2px dashed rgba(78, 205, 196, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+        
+        .drop-zone textarea {
+            border: none;
+            background: transparent;
+        }
+        
+        .audio-preview {
+            margin-top: 10px;
+        }
+        
+        .images-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .image-preview-item {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+        
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-preview-item .remove-btn:hover {
+            background: #ef4444;
+        }
+        
+        .output-forms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .input-forms {
+                display: block;
+            }
+            
+            .input-forms .card {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+        }
+        
+        .calendar-nav {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        
+        .calendar-day-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #4ecdc4;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 60px;
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .calendar-day.today {
+            background: rgba(78, 205, 196, 0.2);
+            border: 2px solid #4ecdc4;
+        }
+        
+        .calendar-day.has-activities {
+            background: rgba(255, 107, 107, 0.2);
+        }
+        
+        .calendar-day.future-day {
+            background: rgba(255, 255, 255, 0.01);
+            color: #666;
+        }
+        
+        .calendar-day.future-day:hover {
+            background: rgba(255, 255, 255, 0.01);
+            transform: none;
+        }
+        
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .activity-indicators {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+        }
+        
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        
+        .activity-dot.inputs { background: #4ecdc4; }
+        .activity-dot.processes { background: #ff6b6b; }
+        .activity-dot.outputs { background: #ffd93d; }
+        
+        .view-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .view-tab {
+            background: none;
+            border: none;
+            color: #a1a1aa;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-family: 'Mononoki', 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .view-tab.active {
+            color: #4ecdc4;
+            border-bottom-color: #4ecdc4;
+        }
+        
+        .view-tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .view-content {
+            display: none;
+        }
+        
+        .view-content.active {
+            display: block;
+        }
+
+        .vst3-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .vst3-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .vst3-item h4 {
+            color: #4ecdc4;
+            margin: 0 0 10px 0;
+        }
+        
+        .vst3-item .edit-btn {
+            float: right;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        .vst3-item .edit-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Documents View Styles */
+        .documents-content {
+            margin-top: 20px;
+        }
+
+        .document-categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(91, 50, 124, 0.8);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: rgba(91, 50, 124, 1);
+            transform: translateY(-2px);
+        }
+
+        /* Pipeline View Styles */
+        .pipeline-stages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stage-column {
+            background: rgba(91, 50, 124, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(91, 50, 124, 0.3);
+        }
+
+        .stage-column h4 {
+            margin-top: 0;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .pipeline-item {
+            background: rgba(91, 50, 124, 0.8);
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-family: 'Mononoki', monospace;
+        }
+
+        /* Fitness View Styles */
+        .fitness-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: rgba(91, 50, 124, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(91, 50, 124, 0.3);
+            text-align: center;
+        }
+
+        .metric-card h4 {
+            margin-top: 0;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            font-family: 'Mononoki', monospace;
+        }
+
+        /* Roadmap View Styles */
+        .roadmap-timeline {
+            margin-top: 20px;
+        }
+
+        .timeline-period {
+            background: rgba(91, 50, 124, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #5b327c;
+        }
+
+        .timeline-period h4 {
+            margin-top: 0;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .timeline-period ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .timeline-period li {
+            margin: 8px 0;
+            font-family: 'Mononoki', monospace;
+        }
+
+        /* Energy Vectors View Styles */
+        .energy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .energy-vector {
+            background: rgba(91, 50, 124, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(91, 50, 124, 0.3);
+        }
+
+        .energy-vector h4 {
+            margin-top: 0;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .energy-chart,
+        .flow-states,
+        .mental-indicators {
+            margin-top: 10px;
+        }
+
+        .time-slot,
+        .flow-indicator,
+        .state-track {
+            background: rgba(91, 50, 124, 0.8);
+            color: white;
+            padding: 6px 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-family: 'Mononoki', monospace;
+        }
+
+        /* Fasting View Styles */
+        .fasting-tracker {
+            margin-top: 20px;
+        }
+
+        .sun-times,
+        .fasting-schedule,
+        .fasting-progress,
+        .fasting-benefits {
+            background: rgba(91, 50, 124, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(91, 50, 124, 0.3);
+        }
+
+        .sun-times h4,
+        .fasting-schedule h4,
+        .fasting-progress h4,
+        .fasting-benefits h4 {
+            margin-top: 0;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .sun-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .sunrise-time,
+        .sunset-time {
+            background: linear-gradient(45deg, #ff9500, #ffb84d);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: 'Mononoki', monospace;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .sunset-time {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+        }
+
+        .schedule-info,
+        .progress-indicator,
+        .benefit-list {
+            margin-top: 10px;
+        }
+
+        .fast-window,
+        .eat-window {
+            background: rgba(91, 50, 124, 0.8);
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .eat-window {
+            background: rgba(34, 139, 34, 0.8);
+        }
+
+        .current-status {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: 'Mononoki', monospace;
+            font-size: 1.1em;
+        }
+
+        .status-badge.fasting {
+            background: rgba(220, 20, 60, 0.8);
+            color: white;
+        }
+
+        .status-badge.eating {
+            background: rgba(34, 139, 34, 0.8);
+            color: white;
+        }
+
+        .timer-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .timer-section {
+            text-align: center;
+            background: rgba(91, 50, 124, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .timer-label {
+            font-size: 0.9em;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+            margin-bottom: 5px;
+        }
+
+        .timer-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            font-family: 'Mononoki', monospace;
+            color: #333;
+        }
+
+        .progress-bar-container {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            background: rgba(91, 50, 124, 0.2);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5b327c, #8a4fb8);
+            width: 0%;
+            transition: width 1s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            font-family: 'Mononoki', monospace;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .benefit-item {
+            background: rgba(91, 50, 124, 0.8);
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-family: 'Mononoki', monospace;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Monthly Payments View Styles */
+        .payments-overview {
+            margin-top: 20px;
+        }
+
+        .payment-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .category-section {
+            background: rgba(91, 50, 124, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(91, 50, 124, 0.3);
+        }
+
+        .category-section h4 {
+            margin-top: 0;
+            color: #5b327c;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(91, 50, 124, 0.8);
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-family: 'Mononoki', monospace;
+        }
+
+        .amount {
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .payment-summary {
+            text-align: center;
+            background: rgba(91, 50, 124, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #5b327c;
+        }
+
+        .payment-summary h4 {
+            margin: 0;
+            color: #5b327c;
+            font-size: 1.3em;
+            font-family: 'Mononoki', monospace;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .close {
+            color: #999;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: 'Mononoki', 'Courier New', monospace;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .form-actions button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Mononoki', 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .form-actions button[type="submit"] {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+        }
+
+        .form-actions button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .form-actions button[type="button"] {
+            background: #6b7280;
+            color: white;
+        }
+
+        .form-actions button[type="button"]:hover {
+            background: #4b5563;
+        }
+
+        /* Enhanced VST3 Styles */
+        .vst3-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+        
+        .vst3-header-section > div {
+            flex: 1;
+        }
+        
+        .vst3-controls {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .add-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Mononoki', 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .vst3-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .vst3-header h4 {
+            margin: 0;
+            color: #4ecdc4;
+            font-size: 1.2em;
+        }
+
+        .tags {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #a1a1aa;
+        }
+
+        .file-path {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #6b7280;
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        #categoryGroup {
+            display: block;
+        }
+
+        .form-group input[type="text"]:invalid,
+        .form-group select:invalid {
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔁CREATIVE LOOP</h1>
+            <p>Track your creative consistency and momentum</p>
+            <button id="return-to-today" class="btn" style="display: none; margin-top: 10px;" onclick="returnToToday()">📅 Return to Today</button>
+        </div>
+
+        <!-- View Tabs -->
+        <div class="view-tabs">
+            <button class="view-tab active" data-view="dashboard">📊 Dashboard</button>
+            <button class="view-tab" data-view="calendar">📅 Calendar</button>
+            <button class="view-tab" data-view="vst3">🎛️ VST3 Plugins</button>
+            <button class="view-tab" data-view="documents">📄 Documents</button>
+            <button class="view-tab" data-view="pipeline">🔧 Pipeline</button>
+            <button class="view-tab" data-view="fitness">💪 Fitness</button>
+            <button class="view-tab" data-view="roadmap">🗺️ Roadmap</button>
+            <button class="view-tab" data-view="energy">⚡ Energy Vectors</button>
+            <button class="view-tab" data-view="fasting">🍽️ Fasting</button>
+            <button class="view-tab" data-view="payments">💳 Monthly Payments</button>
+        </div>
+
+        <!-- Dashboard View -->
+        <div class="view-content active" id="dashboard-view">
+        <div class="dashboard-grid">
+            <!-- Daily Input Status -->
+            <div class="card">
+                <h3>📅 Today's Input Loop</h3>
+                <div class="loop-status">
+                    <span>Sonic Sketch (30 min Music Jam)</span>
+                    <span class="status-indicator incomplete" id="sketch-status">❌</span>
+                </div>
+                <div class="loop-status">
+                    <span>Visual Moodboard (5 images)</span>
+                    <span class="status-indicator incomplete" id="visual-status">❌</span>
+                </div>
+                <div class="loop-status">
+                    <span>Lore/Study Fragment</span>
+                    <span class="status-indicator incomplete" id="lore-status">❌</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="daily-progress" style="width: 0%"></div>
+                </div>
+                <p id="daily-status-text">Daily loop incomplete</p>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn" onclick="toggleInputForms()" style="font-size: 0.9em; padding: 8px 16px;">
+                        ✏️ Edit Inputs
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Weekly Progress -->
+            <div class="card">
+                <h3>📊 Weekly Progress</h3>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="weekly-micro">0</div>
+                        <div class="stat-label">Micro Releases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Target</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="weekly-progress" style="width: 0%"></div>
+                </div>
+                <p id="weekly-status-text">Behind weekly target</p>
+            </div>
+            
+            <!-- Monthly Progress -->
+            <div class="card">
+                <h3>📈 Monthly Progress</h3>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="monthly-major">0</div>
+                        <div class="stat-label">Major Releases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Target</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="monthly-vst3">0</div>
+                        <div class="stat-label">VST3 Plugins</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Target (1/week)</div>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <div class="progress-item">
+                        <label>Major Releases:</label>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="monthly-major-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <label>VST3 Plugins:</label>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="monthly-vst3-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <p id="monthly-status-text">Behind monthly targets</p>
+            </div>
+            
+            <!-- Creative Stats -->
+            <div class="card">
+                <h3>📊 Creative Statistics</h3>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="streak-count">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="completion-rate">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-processes">0</div>
+                        <div class="stat-label">Processes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-outputs">0</div>
+                        <div class="stat-label">Total Outputs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input Forms -->
+        <div class="input-forms" id="input-forms" style="display: none;">
+            <div style="text-align: right; margin-bottom: 20px;">
+                <button class="btn" onclick="toggleInputForms()" style="background: #ef4444;">✖️ Close Forms</button>
+            </div>
+            <div class="card">
+                <h3>🎵 Edit Sonic Sketch</h3>
+                <form id="sketch-form">
+                    <div class="form-group">
+                        <label>Duration (minutes):</label>
+                        <input type="number" id="sketch-duration" value="30" min="1" max="120">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea id="sketch-description" placeholder="Describe your sonic sketch..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Audio File (optional):</label>
+                        <div class="file-input-group">
+                            <input type="file" id="sketch-audio-file" accept="audio/*" style="display: none;">
+                            <input type="text" id="sketch-audio" placeholder="path/to/audio.wav" readonly>
+                            <button type="button" class="btn file-browse-btn" onclick="document.getElementById('sketch-audio-file').click()">
+                                📁 Browse
+                            </button>
+                        </div>
+                        <div id="sketch-audio-preview" class="audio-preview" style="display: none;">
+                            <audio controls style="width: 100%; margin-top: 10px;"></audio>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (comma-separated):</label>
+                        <input type="text" id="sketch-tags" placeholder="ambient, experimental, field-recording">
+                    </div>
+                    <button type="submit" class="btn">💾 Save Sonic Sketch</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h3>🖼️ Edit Visual Moodboard</h3>
+                <form id="visual-form">
+                    <div class="form-group">
+                        <label>Theme:</label>
+                        <input type="text" id="visual-theme" placeholder="Cyberpunk neon aesthetics">
+                    </div>
+                    <div class="form-group">
+                        <label>Images (5 recommended for complete moodboard):</label>
+                        <div class="file-input-group">
+                            <input type="file" id="visual-images-file" accept="image/*" multiple style="display: none;">
+                            <div class="drop-zone" id="image-drop-zone">
+                                <textarea id="visual-images" placeholder="Drag & drop images here or click Browse..." readonly></textarea>
+                            </div>
+                            <button type="button" class="btn file-browse-btn" onclick="document.getElementById('visual-images-file').click()">
+                                📁 Browse Images
+                            </button>
+                        </div>
+                        <div class="image-counter" id="image-counter" style="display: none;">
+                            <small style="color: #4ecdc4; font-weight: bold;"></small>
+                        </div>
+                        <div id="visual-images-preview" class="images-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Color Palette (comma-separated):</label>
+                        <input type="text" id="visual-colors" placeholder="#ff00ff, #00ffff, #ffff00">
+                    </div>
+                    <button type="submit" class="btn">💾 Save Visual Moodboard</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h3>📖 Edit Lore Fragment</h3>
+                <form id="lore-form">
+                    <div class="form-group">
+                        <label>Character:</label>
+                        <input type="text" id="lore-character" placeholder="Character name">
+                    </div>
+                    <div class="form-group">
+                        <label>Fragment:</label>
+                        <textarea id="lore-fragment" placeholder="Describe the lore fragment..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Narrative Arc:</label>
+                        <input type="text" id="lore-arc" placeholder="Digital archaeology arc">
+                    </div>
+                    <div class="form-group">
+                        <label>World Building Elements (comma-separated):</label>
+                        <input type="text" id="lore-elements" placeholder="data ghosts, forgotten networks, encrypted memories">
+                    </div>
+                    <button type="submit" class="btn">� Save Lore Fragment</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="controls">
+            <button class="btn" onclick="toggleInputForms()">✏️ Edit Today's Inputs</button>
+            <button class="btn" onclick="quickLogProcess()">⚡ Log Process</button>
+            <button class="btn" onclick="quickLogOutput()">🎯 Log Output</button>
+            <button class="btn" onclick="refreshData()">🔄 Refresh Data</button>
+        </div>
+        
+        <!-- Recent Activity Timeline -->
+        <div class="timeline">
+            <h3>🕒 Recent Activity</h3>
+            <div id="timeline-content">
+                <div class="timeline-item">
+                    <span class="emoji">🎯</span>
+                    <div class="timeline-date">Today</div>
+                    <div class="timeline-content">
+                        Welcome to your Creative Loop Dashboard! Start by logging your daily inputs.
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Calendar View -->
+        <div class="view-content" id="calendar-view">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="prev-month">◀</button>
+                    <h2 id="calendar-title">October 2025</h2>
+                    <button class="calendar-nav" id="next-month">▶</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VST3 Plugins View -->
+        <div class="view-content" id="vst3-view">
+            <div class="card">
+                <div class="vst3-header-section">
+                    <div>
+                        <h3>🎛️ VST3 Plugin Development</h3>
+                        <p>Track your VST3 plugin development progress (1 per week, 4 per month)</p>
+                    </div>
+                    <button class="add-btn" onclick="openVST3Modal()">+ Add New VST3 Plugin</button>
+                </div>
+                
+                <div class="vst3-list" id="vst3-list">
+                    <!-- VST3 plugins will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents View -->
+        <div class="view-content" id="documents-view">
+            <div class="card">
+                <h3>📄 Documents</h3>
+                <p>Manage your creative documentation, lyrics, ideas, and project notes</p>
+                <div class="documents-content">
+                    <div class="document-categories">
+                        <button class="category-btn active">📝 Lyrics</button>
+                        <button class="category-btn">💡 Ideas</button>
+                        <button class="category-btn">📋 Project Notes</button>
+                        <button class="category-btn">📖 Concepts</button>
+                    </div>
+                    <div class="document-list">
+                        <p>Document management coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pipeline View -->
+        <div class="view-content" id="pipeline-view">
+            <div class="card">
+                <h3>🔧 Pipeline</h3>
+                <p>Track your creative workflow and production pipeline</p>
+                <div class="pipeline-stages">
+                    <div class="stage-column">
+                        <h4>📥 Intake</h4>
+                        <div class="stage-items">
+                            <div class="pipeline-item">Sonic Sketches</div>
+                            <div class="pipeline-item">Visual Ideas</div>
+                        </div>
+                    </div>
+                    <div class="stage-column">
+                        <h4>🔄 Process</h4>
+                        <div class="stage-items">
+                            <div class="pipeline-item">Sample Processing</div>
+                            <div class="pipeline-item">Remix Development</div>
+                        </div>
+                    </div>
+                    <div class="stage-column">
+                        <h4>📤 Output</h4>
+                        <div class="stage-items">
+                            <div class="pipeline-item">Micro Releases</div>
+                            <div class="pipeline-item">Major Releases</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fitness View -->
+        <div class="view-content" id="fitness-view">
+            <div class="card">
+                <h3>💪 Fitness</h3>
+                <p>Track your physical health and energy levels to maintain creative momentum</p>
+                <div class="fitness-metrics">
+                    <div class="metric-card">
+                        <h4>🏃‍♂️ Cardio</h4>
+                        <div class="metric-value">0 sessions this week</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>💪 Strength</h4>
+                        <div class="metric-value">0 sessions this week</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>🧘‍♂️ Flexibility</h4>
+                        <div class="metric-value">0 sessions this week</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>⚡ Energy Level</h4>
+                        <div class="metric-value">Track daily</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roadmap View -->
+        <div class="view-content" id="roadmap-view">
+            <div class="card">
+                <h3>🗺️ Roadmap</h3>
+                <p>Plan your creative journey and track long-term goals</p>
+                <div class="roadmap-timeline">
+                    <div class="timeline-period">
+                        <h4>📅 This Month</h4>
+                        <ul>
+                            <li>4 VST3 Plugins (1 per week)</li>
+                            <li>1 Major Release</li>
+                            <li>Consistent Daily Loop</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-period">
+                        <h4>📅 Next 3 Months</h4>
+                        <ul>
+                            <li>Complete Audio Plugin Suite</li>
+                            <li>Launch Creative Brand</li>
+                            <li>Build Fan Community</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-period">
+                        <h4>📅 This Year</h4>
+                        <ul>
+                            <li>Professional Studio Setup</li>
+                            <li>Live Performance Debut</li>
+                            <li>Collaborative Projects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Energy Vectors View -->
+        <div class="view-content" id="energy-view">
+            <div class="card">
+                <h3>⚡ Energy Vectors</h3>
+                <p>Monitor and optimize your creative energy flows</p>
+                <div class="energy-grid">
+                    <div class="energy-vector">
+                        <h4>🌅 Circadian Rhythm</h4>
+                        <div class="energy-chart">
+                            <div class="time-slot morning">Morning: High</div>
+                            <div class="time-slot afternoon">Afternoon: Medium</div>
+                            <div class="time-slot evening">Evening: Low</div>
+                        </div>
+                    </div>
+                    <div class="energy-vector">
+                        <h4>🎵 Creative Flow</h4>
+                        <div class="flow-states">
+                            <div class="flow-indicator">Deep Work: 25min blocks</div>
+                            <div class="flow-indicator">Break: 5min recharge</div>
+                        </div>
+                    </div>
+                    <div class="energy-vector">
+                        <h4>🧠 Mental State</h4>
+                        <div class="mental-indicators">
+                            <div class="state-track">Focus: Track daily</div>
+                            <div class="state-track">Creativity: Track daily</div>
+                            <div class="state-track">Motivation: Track daily</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fasting View -->
+        <div class="view-content" id="fasting-view">
+            <div class="card">
+                <h3>🍽️ Fasting</h3>
+                <p>Track intermittent fasting for enhanced focus and creative clarity</p>
+                <div class="fasting-tracker">
+                    <div class="sun-times">
+                        <h4>🌅 Today's Sun Schedule</h4>
+                        <div class="sun-info">
+                            <div class="sunrise-time">🌅 Sunrise: <span id="sunrise-time">--:--</span></div>
+                            <div class="sunset-time">🌇 Sunset: <span id="sunset-time">--:--</span></div>
+                        </div>
+                    </div>
+                    <div class="fasting-schedule">
+                        <h4>📋 Today's Fasting Schedule</h4>
+                        <div class="schedule-info">
+                            <div class="fast-window">🚫 Fasting: <span id="fast-start">--:--</span> - <span id="fast-end">--:--</span> (16 hours)</div>
+                            <div class="eat-window">✅ Eating: <span id="eat-start">--:--</span> - <span id="eat-end">--:--</span> (8 hours)</div>
+                        </div>
+                    </div>
+                    <div class="fasting-progress">
+                        <h4>⏱️ Live Progress</h4>
+                        <div class="progress-indicator">
+                            <div class="current-status">
+                                <div class="status-badge" id="current-status">Calculating...</div>
+                            </div>
+                            <div class="timer-display">
+                                <div class="timer-section">
+                                    <div class="timer-label">Current Duration:</div>
+                                    <div class="timer-value" id="current-duration">00:00:00</div>
+                                </div>
+                                <div class="timer-section">
+                                    <div class="timer-label">Time Remaining:</div>
+                                    <div class="timer-value" id="time-remaining">00:00:00</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                                <div class="progress-text" id="progress-percentage">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fasting-benefits">
+                        <h4>🎯 Benefits Tracking</h4>
+                        <div class="benefit-list">
+                            <div class="benefit-item">Mental Clarity: <span id="clarity-level">Track daily</span></div>
+                            <div class="benefit-item">Energy Stability: <span id="energy-level">Track daily</span></div>
+                            <div class="benefit-item">Creative Focus: <span id="focus-level">Track daily</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Payments View -->
+        <div class="view-content" id="payments-view">
+            <div class="card">
+                <h3>💳 Monthly Payments</h3>
+                <p>Track recurring expenses for your creative business and lifestyle</p>
+                <div class="payments-overview">
+                    <div class="payment-categories">
+                        <div class="category-section">
+                            <h4>🎵 Creative Tools</h4>
+                            <div class="payment-items">
+                                <div class="payment-item">
+                                    <span>Ableton Live Suite</span>
+                                    <span class="amount">$20/month</span>
+                                </div>
+                                <div class="payment-item">
+                                    <span>Plugin Subscriptions</span>
+                                    <span class="amount">$30/month</span>
+                                </div>
+                                <div class="payment-item">
+                                    <span>Sample Libraries</span>
+                                    <span class="amount">$15/month</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-section">
+                            <h4>🌐 Online Services</h4>
+                            <div class="payment-items">
+                                <div class="payment-item">
+                                    <span>Cloud Storage</span>
+                                    <span class="amount">$10/month</span>
+                                </div>
+                                <div class="payment-item">
+                                    <span>Streaming Platforms</span>
+                                    <span class="amount">$25/month</span>
+                                </div>
+                                <div class="payment-item">
+                                    <span>Domain & Hosting</span>
+                                    <span class="amount">$12/month</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-section">
+                            <h4>💡 Lifestyle</h4>
+                            <div class="payment-items">
+                                <div class="payment-item">
+                                    <span>Gym Membership</span>
+                                    <span class="amount">$50/month</span>
+                                </div>
+                                <div class="payment-item">
+                                    <span>Supplements</span>
+                                    <span class="amount">$40/month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-summary">
+                        <div class="total-expenses">
+                            <h4>💰 Monthly Total: $202</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Mock data for demonstration - in real implementation, this would fetch from your Python agent
+        let mockData = {
+            daily: { sonic_sketch_complete: false, visual_moodboard_complete: false, lore_fragment_complete: false },
+            weekly: { micro_releases_this_week: 0, vst3_plugins_this_week: 0, weekly_goal_met: false },
+            monthly: { major_releases_this_month: 0, vst3_plugins_this_month: 0, monthly_goal_met: false },
+            stats: { current_streak: 0, completion_rate: 0, total_processes: 0, total_micro_releases: 0, total_major_releases: 0, total_vst3_plugins: 0 }
+        };
+        
+        function updateDashboard() {
+            // Update daily status
+            const dailyComplete = mockData.daily.sonic_sketch_complete + mockData.daily.visual_moodboard_complete + mockData.daily.lore_fragment_complete;
+            const dailyProgress = (dailyComplete / 3) * 100;
+            
+            document.getElementById('sketch-status').textContent = mockData.daily.sonic_sketch_complete ? '✅' : '❌';
+            document.getElementById('sketch-status').className = mockData.daily.sonic_sketch_complete ? 'status-indicator complete' : 'status-indicator incomplete';
+            
+            document.getElementById('visual-status').textContent = mockData.daily.visual_moodboard_complete ? '✅' : '❌';
+            document.getElementById('visual-status').className = mockData.daily.visual_moodboard_complete ? 'status-indicator complete' : 'status-indicator incomplete';
+            
+            document.getElementById('lore-status').textContent = mockData.daily.lore_fragment_complete ? '✅' : '❌';
+            document.getElementById('lore-status').className = mockData.daily.lore_fragment_complete ? 'status-indicator complete' : 'status-indicator incomplete';
+            
+            document.getElementById('daily-progress').style.width = dailyProgress + '%';
+            document.getElementById('daily-status-text').textContent = dailyProgress === 100 ? '🎯 Daily loop complete!' : `${dailyComplete}/3 inputs complete`;
+            
+            // Update weekly progress
+            const weeklyProgress = Math.min(mockData.weekly.micro_releases_this_week * 100, 100);
+            document.getElementById('weekly-micro').textContent = mockData.weekly.micro_releases_this_week;
+            document.getElementById('weekly-progress').style.width = weeklyProgress + '%';
+            document.getElementById('weekly-status-text').textContent = mockData.weekly.weekly_goal_met ? '✅ Weekly goal achieved!' : '⚠️ Behind weekly target';
+            
+            // Update monthly progress
+            const monthlyMajorProgress = Math.min(mockData.monthly.major_releases_this_month * 100, 100);
+            const monthlyVst3Progress = Math.min((mockData.monthly.vst3_plugins_this_month || 0) / 4 * 100, 100);
+            
+            document.getElementById('monthly-major').textContent = mockData.monthly.major_releases_this_month;
+            document.getElementById('monthly-vst3').textContent = mockData.monthly.vst3_plugins_this_month || 0;
+            document.getElementById('monthly-major-progress').style.width = monthlyMajorProgress + '%';
+            document.getElementById('monthly-vst3-progress').style.width = monthlyVst3Progress + '%';
+            document.getElementById('monthly-status-text').textContent = mockData.monthly.monthly_goal_met ? '✅ Monthly goals achieved!' : '⚠️ Behind monthly targets';
+            
+            // Update stats
+            document.getElementById('streak-count').textContent = mockData.stats.current_streak;
+            document.getElementById('completion-rate').textContent = mockData.stats.completion_rate.toFixed(1) + '%';
+            document.getElementById('total-processes').textContent = mockData.stats.total_processes;
+            document.getElementById('total-outputs').textContent = mockData.stats.total_micro_releases + mockData.stats.total_major_releases + (mockData.stats.total_vst3_plugins || 0);
+        }
+        
+        function toggleInputForms() {
+            const formsDiv = document.getElementById('input-forms');
+            if (formsDiv.style.display === 'none') {
+                formsDiv.style.display = 'block';
+                loadExistingInputs();
+            } else {
+                formsDiv.style.display = 'none';
+            }
+        }
+        
+        function loadExistingInputs() {
+            fetch('/api/input/today')
+                .then(response => response.json())
+                .then(data => {
+                    // Load sonic sketch data
+                    if (data.sonic_sketch) {
+                        document.getElementById('sketch-duration').value = data.sonic_sketch.duration_minutes || 30;
+                        document.getElementById('sketch-description').value = data.sonic_sketch.description || '';
+                        document.getElementById('sketch-audio').value = data.sonic_sketch.audio_file || '';
+                        document.getElementById('sketch-tags').value = (data.sonic_sketch.tags || []).join(', ');
+                    }
+                    
+                    // Load visual moodboard data
+                    if (data.visual_moodboard) {
+                        document.getElementById('visual-theme').value = data.visual_moodboard.theme || '';
+                        document.getElementById('visual-images').value = (data.visual_moodboard.images || []).join('\n');
+                        document.getElementById('visual-colors').value = (data.visual_moodboard.color_palette || []).join(', ');
+                    }
+                    
+                    // Load lore fragment data
+                    if (data.lore_fragment) {
+                        document.getElementById('lore-character').value = data.lore_fragment.character || '';
+                        document.getElementById('lore-fragment').value = data.lore_fragment.fragment || '';
+                        document.getElementById('lore-arc').value = data.lore_fragment.narrative_arc || '';
+                        document.getElementById('lore-elements').value = (data.lore_fragment.world_building_elements || []).join(', ');
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not load existing data:', error);
+                    // Forms will remain empty for new inputs
+                });
+        }
+        
+        // File handling functions
+        let selectedImages = [];
+        
+        function setupFileHandlers() {
+            // Audio file handler
+            document.getElementById('sketch-audio-file').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const audioPath = file.name; // In real app, this would be the full path
+                    document.getElementById('sketch-audio').value = audioPath;
+                    
+                    // Show audio preview
+                    const previewDiv = document.getElementById('sketch-audio-preview');
+                    const audio = previewDiv.querySelector('audio');
+                    audio.src = URL.createObjectURL(file);
+                    previewDiv.style.display = 'block';
+                }
+            });
+            
+            // Images file handler
+            document.getElementById('visual-images-file').addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                handleImageFiles(files);
+            });
+            
+            // Drag and drop handlers
+            const dropZone = document.getElementById('image-drop-zone');
+            
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+            
+            dropZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                
+                const files = Array.from(e.dataTransfer.files).filter(file => 
+                    file.type.startsWith('image/')
+                );
+                
+                if (files.length > 0) {
+                    handleImageFiles(files);
+                }
+            });
+        }
+        
+        function showImagePreviews(files) {
+            const previewDiv = document.getElementById('visual-images-preview');
+            previewDiv.innerHTML = '';
+            
+            if (files.length === 0) {
+                previewDiv.style.display = 'none';
+                return;
+            }
+            
+            previewDiv.style.display = 'grid';
+            
+            files.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'image-preview-item';
+                
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.alt = file.name;
+                img.title = file.name;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = () => removeImage(index);
+                
+                item.appendChild(img);
+                item.appendChild(removeBtn);
+                previewDiv.appendChild(item);
+            });
+        }
+        
+        function removeImage(index) {
+            selectedImages.splice(index, 1);
+            const fileNames = selectedImages.map(f => f.name);
+            document.getElementById('visual-images').value = fileNames.join('\n');
+            updateImageCounter(selectedImages.length);
+            showImagePreviews(selectedImages);
+            
+            // Update the file input (this is a limitation - we can't directly modify file inputs)
+            if (selectedImages.length === 0) {
+                document.getElementById('visual-images-file').value = '';
+            }
+        }
+        
+        function clearAudioPreview() {
+            document.getElementById('sketch-audio-preview').style.display = 'none';
+            document.getElementById('sketch-audio-file').value = '';
+        }
+        
+        function clearImagePreviews() {
+            selectedImages = [];
+            updateImageCounter(0);
+            document.getElementById('visual-images-preview').style.display = 'none';
+            document.getElementById('visual-images-file').value = '';
+        }
+        
+        function handleImageFiles(files) {
+            selectedImages = files;
+            
+            // Update textarea with file names
+            const fileNames = files.map(f => f.name);
+            document.getElementById('visual-images').value = fileNames.join('\n');
+            
+            // Update counter
+            updateImageCounter(files.length);
+            
+            // Show image previews
+            showImagePreviews(files);
+            
+            // Show success message
+            if (files.length > 0) {
+                showSuccessMessage(`📸 ${files.length} image${files.length > 1 ? 's' : ''} selected`);
+            }
+        }
+        
+        function updateImageCounter(count) {
+            const counter = document.getElementById('image-counter');
+            const counterText = counter.querySelector('small');
+            
+            if (count > 0) {
+                counter.style.display = 'block';
+                let message = `${count} image${count > 1 ? 's' : ''} selected`;
+                
+                if (count === 5) {
+                    message += ' ✅ Perfect for moodboard!';
+                    counterText.style.color = '#22c55e';
+                } else if (count < 5) {
+                    message += ` (${5 - count} more recommended)`;
+                    counterText.style.color = '#f59e0b';
+                } else {
+                    message += ' (more than recommended)';
+                    counterText.style.color = '#4ecdc4';
+                }
+                
+                counterText.textContent = message;
+            } else {
+                counter.style.display = 'none';
+            }
+        }
+        
+        // Form submission handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileHandlers();
+            document.getElementById('sketch-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const audioFile = document.getElementById('sketch-audio').value;
+                const data = {
+                    duration: parseInt(document.getElementById('sketch-duration').value),
+                    description: document.getElementById('sketch-description').value,
+                    audio_file: audioFile || null,
+                    tags: document.getElementById('sketch-tags').value.split(',').map(t => t.trim()).filter(t => t)
+                };
+                
+                fetch('/api/input/sketch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        mockData.daily.sonic_sketch_complete = true;
+                        updateDashboard();
+                        addTimelineItem('🎵', `Sonic sketch updated: ${data.description}`);
+                        showSuccessMessage('🎵 Sonic sketch saved successfully!');
+                        document.getElementById('sketch-form').reset();
+                        clearAudioPreview();
+                        refreshData();
+                    }
+                })
+                .catch(error => {
+                    // Fallback for demo mode
+                    mockData.daily.sonic_sketch_complete = true;
+                    updateDashboard();
+                    addTimelineItem('🎵', `Sonic sketch logged: ${data.description}`);
+                });
+            });
+            
+            document.getElementById('visual-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Use selected images if available, otherwise fall back to textarea
+                const imageList = selectedImages.length > 0 
+                    ? selectedImages.map(f => f.name)
+                    : document.getElementById('visual-images').value.split('\n').map(img => img.trim()).filter(img => img);
+                
+                const data = {
+                    theme: document.getElementById('visual-theme').value,
+                    images: imageList,
+                    color_palette: document.getElementById('visual-colors').value.split(',').map(c => c.trim()).filter(c => c)
+                };
+                
+                fetch('/api/input/visual', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        mockData.daily.visual_moodboard_complete = true;
+                        updateDashboard();
+                        addTimelineItem('🖼️', `Visual moodboard updated: ${data.theme}`);
+                        showSuccessMessage('🖼️ Visual moodboard saved successfully!');
+                        document.getElementById('visual-form').reset();
+                        clearImagePreviews();
+                        refreshData();
+                    }
+                })
+                .catch(error => {
+                    // Fallback for demo mode
+                    mockData.daily.visual_moodboard_complete = true;
+                    updateDashboard();
+                    addTimelineItem('🖼️', `Visual moodboard logged: ${data.theme}`);
+                });
+            });
+            
+            document.getElementById('lore-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = {
+                    character: document.getElementById('lore-character').value,
+                    fragment: document.getElementById('lore-fragment').value,
+                    narrative_arc: document.getElementById('lore-arc').value,
+                    world_building_elements: document.getElementById('lore-elements').value.split(',').map(e => e.trim()).filter(e => e)
+                };
+                
+                fetch('/api/input/lore', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        mockData.daily.lore_fragment_complete = true;
+                        updateDashboard();
+                        addTimelineItem('📖', `Lore fragment updated for ${data.character}: ${data.fragment}`);
+                        showSuccessMessage('📖 Lore fragment saved successfully!');
+                        document.getElementById('lore-form').reset();
+                        refreshData();
+                    }
+                })
+                .catch(error => {
+                    // Fallback for demo mode
+                    mockData.daily.lore_fragment_complete = true;
+                    updateDashboard();
+                    addTimelineItem('📖', `Lore fragment logged for ${data.character}: ${data.fragment}`);
+                });
+            });
+        });
+        
+        function quickLogProcess() {
+            const sample = prompt('Sample source:');
+            const remix = prompt('Remix approach:');
+            const render = prompt('Render format:');
+            const emotion = prompt('Emotion tag:');
+            if (sample && remix && render && emotion) {
+                const data = {
+                    sample_source: sample,
+                    remix_approach: remix,
+                    render_format: render,
+                    emotion_tag: emotion
+                };
+                
+                fetch('/api/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        addTimelineItem('⚡', `Process logged: ${sample} → ${remix} → ${render} (${emotion})`);
+                    }
+                })
+                .catch(error => {
+                    addTimelineItem('⚡', `Process logged: ${sample} → ${remix} → ${render} (${emotion})`);
+                });
+            }
+        }
+        
+        function quickLogOutput() {
+            const type = prompt('Output type (micro/major/vst3):');
+            const title = prompt('Title:');
+            
+            let endpoint, data;
+            if (type === 'vst3') {
+                endpoint = '/api/output/vst3';
+                data = { title };
+            } else {
+                const category = prompt('Category (beat/visual/lore/track/video/plugin):');
+                endpoint = type === 'major' ? '/api/output/major' : '/api/output/micro';
+                data = { title, category };
+            }
+            
+            if (type && title && (type === 'vst3' || data.category)) {
+                
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        if (type === 'major') {
+                            mockData.monthly.major_releases_this_month++;
+                            mockData.monthly.monthly_goal_met = mockData.monthly.major_releases_this_month >= 1 && mockData.monthly.vst3_plugins_this_month >= 4;
+                        } else if (type === 'vst3') {
+                            mockData.weekly.vst3_plugins_this_week++;
+                            mockData.monthly.vst3_plugins_this_month++;
+                            mockData.weekly.weekly_goal_met = mockData.weekly.micro_releases_this_week >= 1 && mockData.weekly.vst3_plugins_this_week >= 1;
+                            mockData.monthly.monthly_goal_met = mockData.monthly.major_releases_this_month >= 1 && mockData.monthly.vst3_plugins_this_month >= 4;
+                        } else {
+                            mockData.weekly.micro_releases_this_week++;
+                            mockData.weekly.weekly_goal_met = mockData.weekly.micro_releases_this_week >= 1 && mockData.weekly.vst3_plugins_this_week >= 1;
+                        }
+                        updateDashboard();
+                        addTimelineItem('🎯', `${type === 'major' ? 'Major' : 'Micro'} release logged: ${title}`);
+                    }
+                })
+                .catch(error => {
+                    addTimelineItem('🎯', `${type === 'major' ? 'Major' : 'Micro'} release logged: ${title}`);
+                });
+            }
+        }
+        
+        function addTimelineItem(emoji, text) {
+            const timeline = document.getElementById('timeline-content');
+            const newItem = document.createElement('div');
+            newItem.className = 'timeline-item';
+            newItem.innerHTML = `
+                <span class="emoji">${emoji}</span>
+                <div class="timeline-date">Just now</div>
+                <div class="timeline-content">${text}</div>
+            `;
+            timeline.insertBefore(newItem, timeline.firstChild);
+        }
+        
+        function showSuccessMessage(message) {
+            // Create a temporary success message
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #22c55e, #16a34a);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            // Animate in
+            setTimeout(() => {
+                successDiv.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                successDiv.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(successDiv);
+                }, 300);
+            }, 3000);
+        }
+        
+        function refreshData() {
+            fetch('/api/data/all')
+                .then(response => response.json())
+                .then(data => {
+                    // Update mock data with real data
+                    mockData.daily = data.daily;
+                    mockData.weekly = data.weekly;
+                    mockData.monthly = data.monthly;
+                    mockData.stats = data.stats;
+                    updateDashboard();
+                })
+                .catch(error => {
+                    console.log('Could not fetch data, using mock data:', error);
+                    updateDashboard();
+                });
+        }
+        
+        // Initialize dashboard
+        updateDashboard();
+        
+        // Load real data on page load
+        setTimeout(refreshData, 500);
+
+        // View Tab Functionality
+        document.querySelectorAll('.view-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const viewName = this.dataset.view;
+                
+                // Update active tab
+                document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update active view
+                document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+                document.getElementById(viewName + '-view').classList.add('active');
+                
+                // Load view-specific data
+                if (viewName === 'calendar') {
+                    loadCalendar();
+                } else if (viewName === 'vst3') {
+                    loadVST3Plugins();
+                }
+            });
+        });
+
+        // Calendar Functionality
+        let currentDate = new Date();
+        
+        function loadCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth() + 1;
+            
+            document.getElementById('calendar-title').textContent = 
+                new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            fetch(`/api/calendar/${year}/${month}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderCalendar(year, month, data.calendar);
+                    }
+                })
+                .catch(error => {
+                    console.log('Calendar data not available, showing empty calendar');
+                    renderCalendar(year, month, {});
+                });
+        }
+        
+        function renderCalendar(year, month, calendarData) {
+            const grid = document.getElementById('calendar-grid');
+            const firstDay = new Date(year, month - 1, 1);
+            const lastDay = new Date(year, month, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+            
+            grid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                grid.appendChild(emptyDay);
+            }
+            
+            // Add days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                const today = new Date();
+                const currentDay = new Date(year, month - 1, day);
+                const isFuture = currentDay > today;
+                const isToday = year === today.getFullYear() && month === today.getMonth() + 1 && day === today.getDate();
+                
+                if (isToday) {
+                    dayElement.classList.add('today');
+                }
+                
+                if (isFuture) {
+                    dayElement.classList.add('future-day');
+                }
+                
+                const dayKey = String(day).padStart(2, '0');
+                const dayData = calendarData[dayKey] || {};
+                
+                if (Object.keys(dayData).length > 0) {
+                    dayElement.classList.add('has-activities');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'calendar-day-number';
+                dayNumber.textContent = day;
+                dayElement.appendChild(dayNumber);
+                
+                // Add activity indicators
+                const indicators = document.createElement('div');
+                indicators.className = 'activity-indicators';
+                
+                Object.keys(dayData).forEach(activityType => {
+                    const dot = document.createElement('div');
+                    dot.className = `activity-dot ${activityType}`;
+                    indicators.appendChild(dot);
+                });
+                
+                dayElement.appendChild(indicators);
+                
+                // Add click handler (only for past/present days)
+                if (!isFuture) {
+                    dayElement.addEventListener('click', () => {
+                        loadDayInDashboard(year, month, day, dayData);
+                    });
+                    dayElement.style.cursor = 'pointer';
+                } else {
+                    dayElement.style.cursor = 'not-allowed';
+                    dayElement.style.opacity = '0.5';
+                }
+                
+                grid.appendChild(dayElement);
+            }
+        }
+        
+        // Calendar navigation
+        document.getElementById('prev-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            loadCalendar();
+        });
+        
+        document.getElementById('next-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            loadCalendar();
+        });
+        
+        function loadDayInDashboard(year, month, day, dayData) {
+            const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dateObj = new Date(year, month - 1, day);
+            const isToday = dateObj.toDateString() === new Date().toDateString();
+            
+            // Switch to dashboard view
+            showView('dashboard');
+            
+            // Update dashboard title to show selected date
+            const dashboardTitle = document.querySelector('.header h1');
+            if (isToday) {
+                dashboardTitle.innerHTML = '🔁 DSGNRG CREATIVE LOOP';
+                document.getElementById('return-to-today').style.display = 'none';
+            } else {
+                dashboardTitle.innerHTML = `� CREATIVE LOOP - ${dateObj.toLocaleDateString()}`;
+            }
+            
+            // Show/hide return button
+            const returnButton = document.getElementById('return-to-today');
+            if (!isToday) {
+                returnButton.style.display = 'inline-block';
+            }
+            
+            // Load day-specific data into dashboard
+            loadDayData(date, dayData, isToday);
+        }
+        
+        function loadDayData(date, dayData, isToday) {
+            // If it's today, load real-time data
+            if (isToday) {
+                refreshData();
+                return;
+            }
+            
+            // For past days, create mock data structure based on calendar data
+            const dayMockData = {
+                daily: { 
+                    date: date,
+                    sonic_sketch_complete: false, 
+                    visual_moodboard_complete: false, 
+                    lore_fragment_complete: false 
+                },
+                weekly: { micro_releases_this_week: 0, vst3_plugins_this_week: 0, weekly_goal_met: false },
+                monthly: { major_releases_this_month: 0, vst3_plugins_this_month: 0, monthly_goal_met: false },
+                stats: { current_streak: 0, completion_rate: 0, total_processes: 0, total_micro_releases: 0, total_major_releases: 0, total_vst3_plugins: 0 }
+            };
+            
+            // Parse calendar data to update completion status
+            if (dayData.inputs) {
+                dayData.inputs.forEach(input => {
+                    if (input.type === 'sonic_sketch') {
+                        dayMockData.daily.sonic_sketch_complete = true;
+                    }
+                });
+            }
+            
+            if (dayData.outputs) {
+                dayData.outputs.forEach(output => {
+                    if (output.type === 'vst3') {
+                        dayMockData.weekly.vst3_plugins_this_week++;
+                        dayMockData.monthly.vst3_plugins_this_month++;
+                    } else if (output.type === 'micro') {
+                        dayMockData.weekly.micro_releases_this_week++;
+                    } else if (output.type === 'major') {
+                        dayMockData.monthly.major_releases_this_month++;
+                    }
+                });
+            }
+            
+            // Update global mockData and refresh dashboard
+            Object.assign(mockData, dayMockData);
+            updateDashboard();
+            
+            // Add timeline items for the selected day
+            const timeline = document.getElementById('timeline-content');
+            timeline.innerHTML = ''; // Clear existing timeline
+            
+            if (Object.keys(dayData).length === 0) {
+                const emptyItem = document.createElement('div');
+                emptyItem.className = 'timeline-item';
+                emptyItem.innerHTML = `
+                    <span class="emoji">📅</span>
+                    <div class="timeline-date">${new Date(date).toLocaleDateString()}</div>
+                    <div class="timeline-content">No activities recorded for this day</div>
+                `;
+                timeline.appendChild(emptyItem);
+            } else {
+                Object.entries(dayData).forEach(([activityType, activities]) => {
+                    activities.forEach(activity => {
+                        const item = document.createElement('div');
+                        item.className = 'timeline-item';
+                        
+                        let emoji = '📝';
+                        let content = '';
+                        
+                        if (activity.type === 'sonic_sketch') {
+                            emoji = '🎵';
+                            content = `Sonic Sketch: ${activity.description} (${activity.duration} min)`;
+                        } else if (activity.type === 'vst3') {
+                            emoji = '🎛️';
+                            content = `VST3 Plugin: ${activity.title} - ${activity.description}`;
+                        } else {
+                            content = JSON.stringify(activity);
+                        }
+                        
+                        item.innerHTML = `
+                            <span class="emoji">${emoji}</span>
+                            <div class="timeline-date">${new Date(date).toLocaleDateString()}</div>
+                            <div class="timeline-content">${content}</div>
+                        `;
+                        timeline.appendChild(item);
+                    });
+                });
+            }
+        }
+        
+        function returnToToday() {
+            const today = new Date();
+            const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            
+            // Reset title and hide button
+            document.querySelector('.header h1').innerHTML = '🔁 DSGNRG CREATIVE LOOP';
+            document.getElementById('return-to-today').style.display = 'none';
+            
+            // Load today's data
+            refreshData();
+        }
+        
+        function showDayDetails(year, month, day, dayData) {
+            // This function is kept for backward compatibility but now redirects to loadDayInDashboard
+            loadDayInDashboard(year, month, day, dayData);
+        }
+
+        // View Management
+        function showView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view-content').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.view-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected view
+            document.getElementById(viewName + '-view').classList.add('active');
+            
+            // Set active tab
+            document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+            
+            // Load view-specific data
+            if (viewName === 'calendar') {
+                loadCalendar();
+            } else if (viewName === 'vst3') {
+                loadVST3Plugins();
+            }
+        }
+        
+        // Add event listeners for view tabs
+        document.querySelectorAll('.view-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const viewName = e.target.getAttribute('data-view');
+                showView(viewName);
+            });
+        });
+
+        // VST3 Plugin Management
+        function loadVST3Plugins() {
+            fetch('/api/output/vst3')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderVST3List(data.plugins);
+                    }
+                })
+                .catch(error => {
+                    console.log('VST3 data not available');
+                    document.getElementById('vst3-list').innerHTML = '<p>No VST3 plugins found.</p>';
+                });
+        }
+        
+        function renderVST3List(plugins) {
+            const list = document.getElementById('vst3-list');
+            
+            let html = '';
+            
+            if (plugins.length === 0) {
+                html += '<p>No VST3 plugins found. Start creating your weekly plugin!</p>';
+            } else {
+                html += plugins.map(plugin => `
+                    <div class="vst3-item">
+                        <div class="vst3-header">
+                            <h4>${plugin.title}</h4>
+                            <button class="edit-btn" onclick="editVST3Plugin('${plugin.id}')">✏️ Edit</button>
+                        </div>
+                        <p>${plugin.description}</p>
+                        <small>Created: ${new Date(plugin.release_date).toLocaleDateString()}</small>
+                        ${plugin.tags && plugin.tags.length > 0 ? `<div class="tags">Tags: ${plugin.tags.join(', ')}</div>` : ''}
+                        ${plugin.file_path ? `<div class="file-path">File: ${plugin.file_path}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            list.innerHTML = html;
+        }
+        
+        function openVST3Modal(pluginId = null) {
+            const modal = document.getElementById('quickLogModal');
+            const form = document.getElementById('quickLogForm');
+            const typeSelect = document.getElementById('outputType');
+            
+            // Set to VST3 type
+            typeSelect.value = 'vst3';
+            
+            if (pluginId) {
+                // Edit mode - fetch current data
+                fetch(`/api/output/vst3`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const plugin = data.plugins.find(p => p.id === pluginId);
+                            if (plugin) {
+                                document.getElementById('outputTitle').value = plugin.title;
+                                document.getElementById('outputDescription').value = plugin.description;
+                                form.setAttribute('data-edit-id', pluginId);
+                            }
+                        }
+                    });
+            } else {
+                // New plugin mode
+                form.removeAttribute('data-edit-id');
+                form.reset();
+                typeSelect.value = 'vst3';
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        function editVST3Plugin(pluginId) {
+            openVST3Modal(pluginId);
+        }
+        
+        // Handle output type change to show/hide category field
+        function handleOutputTypeChange() {
+            const typeSelect = document.getElementById('outputType');
+            const categoryGroup = document.getElementById('categoryGroup');
+            
+            if (typeSelect.value === 'vst3') {
+                categoryGroup.style.display = 'none';
+            } else {
+                categoryGroup.style.display = 'block';
+            }
+        }
+
+        // Handle quick log modal form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up output type change handler
+            const typeSelect = document.getElementById('outputType');
+            if (typeSelect) {
+                typeSelect.addEventListener('change', handleOutputTypeChange);
+                handleOutputTypeChange(); // Initialize
+            }
+            const quickLogForm = document.getElementById('quickLogForm');
+            if (quickLogForm) {
+                quickLogForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(e.target);
+                    const type = formData.get('type');
+                    const title = formData.get('title');
+                    const description = formData.get('description') || '';
+                    const editId = e.target.getAttribute('data-edit-id');
+                    
+                    let endpoint = '/api/output/' + type;
+                    let method = 'POST';
+                    let data = { title, description };
+                    
+                    if (editId) {
+                        endpoint += '/' + editId;
+                        method = 'PUT';
+                    }
+                    
+                    if (type !== 'vst3') {
+                        data.category = formData.get('category');
+                    }
+                    
+                    fetch(endpoint, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            showSuccessMessage(editId ? 'Updated successfully!' : 'Created successfully!');
+                            document.getElementById('quickLogModal').style.display = 'none';
+                            e.target.reset();
+                            e.target.removeAttribute('data-edit-id');
+                            
+                            // Refresh current view
+                            const activeView = document.querySelector('.view-tab.active').getAttribute('data-view');
+                            if (activeView === 'vst3') {
+                                loadVST3Plugins();
+                            } else {
+                                updateDashboard();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error saving. Please try again.');
+                    });
+                });
+            }
+        });
+
+        // Fasting Tracker System
+        class FastingTracker {
+            constructor() {
+                this.latitude = 40.7128; // Default to NYC coordinates
+                this.longitude = -74.0060;
+                this.fastingTimer = null;
+                this.init();
+            }
+
+            init() {
+                // Try to get user's location for accurate sunrise/sunset
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.latitude = position.coords.latitude;
+                        this.longitude = position.coords.longitude;
+                        this.updateFastingData();
+                    }, () => {
+                        // Fallback to default location
+                        this.updateFastingData();
+                    });
+                } else {
+                    this.updateFastingData();
+                }
+
+                // Start real-time updates
+                this.startTimer();
+            }
+
+            calculateSunTimes(date) {
+                // Simplified sunrise/sunset calculation
+                const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+                const lat = this.latitude * Math.PI / 180;
+                
+                // Solar declination
+                const declination = Math.asin(Math.sin(23.45 * Math.PI / 180) * Math.sin((360 * (284 + dayOfYear) / 365) * Math.PI / 180));
+                
+                // Hour angle
+                const hourAngle = Math.acos(-Math.tan(lat) * Math.tan(declination));
+                
+                // Convert to hours
+                const sunriseHour = 12 - (hourAngle * 12 / Math.PI);
+                const sunsetHour = 12 + (hourAngle * 12 / Math.PI);
+                
+                // Create time objects
+                const sunrise = new Date(date);
+                sunrise.setHours(Math.floor(sunriseHour), (sunriseHour % 1) * 60, 0, 0);
+                
+                const sunset = new Date(date);
+                sunset.setHours(Math.floor(sunsetHour), (sunsetHour % 1) * 60, 0, 0);
+                
+                return { sunrise, sunset };
+            }
+
+            getFastingSchedule(date) {
+                const { sunrise, sunset } = this.calculateSunTimes(date);
+                
+                // Fasting starts at sunset, lasts 16 hours
+                const fastStart = new Date(sunset);
+                const fastEnd = new Date(sunset.getTime() + (16 * 60 * 60 * 1000));
+                
+                // Eating window is the remaining 8 hours
+                const eatStart = new Date(fastEnd);
+                const eatEnd = new Date(fastStart);
+                
+                return {
+                    sunrise,
+                    sunset,
+                    fastStart,
+                    fastEnd,
+                    eatStart,
+                    eatEnd
+                };
+            }
+
+            formatTime(date) {
+                return date.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            }
+
+            formatDuration(milliseconds) {
+                const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+                const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+                
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            updateFastingData() {
+                const now = new Date();
+                const schedule = this.getFastingSchedule(now);
+                
+                // Update sun times
+                document.getElementById('sunrise-time').textContent = this.formatTime(schedule.sunrise);
+                document.getElementById('sunset-time').textContent = this.formatTime(schedule.sunset);
+                
+                // Update fasting schedule
+                document.getElementById('fast-start').textContent = this.formatTime(schedule.fastStart);
+                document.getElementById('fast-end').textContent = this.formatTime(schedule.fastEnd);
+                document.getElementById('eat-start').textContent = this.formatTime(schedule.eatStart);
+                document.getElementById('eat-end').textContent = this.formatTime(schedule.eatEnd);
+                
+                this.updateProgress(now, schedule);
+            }
+
+            updateProgress(now, schedule) {
+                const currentTime = now.getTime();
+                const fastStartTime = schedule.fastStart.getTime();
+                const fastEndTime = schedule.fastEnd.getTime();
+                
+                const statusBadge = document.getElementById('current-status');
+                const currentDuration = document.getElementById('current-duration');
+                const timeRemaining = document.getElementById('time-remaining');
+                const progressFill = document.getElementById('progress-fill');
+                const progressText = document.getElementById('progress-percentage');
+                
+                let isFasting = false;
+                let currentMs = 0;
+                let remainingMs = 0;
+                let progressPercent = 0;
+                
+                // Check if we're currently fasting
+                if (currentTime >= fastStartTime && currentTime <= fastEndTime) {
+                    // Currently fasting
+                    isFasting = true;
+                    currentMs = currentTime - fastStartTime;
+                    remainingMs = fastEndTime - currentTime;
+                    progressPercent = (currentMs / (16 * 60 * 60 * 1000)) * 100;
+                    
+                    statusBadge.textContent = '🚫 Fasting';
+                    statusBadge.className = 'status-badge fasting';
+                } else {
+                    // Currently in eating window
+                    isFasting = false;
+                    
+                    // Calculate time until next fast
+                    let nextFastStart;
+                    if (currentTime < fastStartTime) {
+                        nextFastStart = fastStartTime;
+                    } else {
+                        // Next fast is tomorrow
+                        const tomorrow = new Date(now);
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        const tomorrowSchedule = this.getFastingSchedule(tomorrow);
+                        nextFastStart = tomorrowSchedule.fastStart.getTime();
+                    }
+                    
+                    currentMs = 0;
+                    remainingMs = nextFastStart - currentTime;
+                    progressPercent = 0;
+                    
+                    statusBadge.textContent = '✅ Eating Window';
+                    statusBadge.className = 'status-badge eating';
+                }
+                
+                // Update display
+                currentDuration.textContent = this.formatDuration(Math.max(0, currentMs));
+                timeRemaining.textContent = this.formatDuration(Math.max(0, remainingMs));
+                progressFill.style.width = Math.min(100, progressPercent) + '%';
+                progressText.textContent = Math.floor(progressPercent) + '%';
+                
+                // Update benefits based on fasting duration
+                this.updateBenefits(currentMs, isFasting);
+            }
+
+            updateBenefits(fastingMs, isFasting) {
+                if (!isFasting) {
+                    document.getElementById('clarity-level').textContent = 'Baseline';
+                    document.getElementById('energy-level').textContent = 'Stable';
+                    document.getElementById('focus-level').textContent = 'Normal';
+                    return;
+                }
+                
+                const fastingHours = fastingMs / (1000 * 60 * 60);
+                
+                let clarity = 'Building';
+                let energy = 'Transitioning';
+                let focus = 'Improving';
+                
+                if (fastingHours >= 12) {
+                    clarity = 'High';
+                    energy = 'Stable';
+                    focus = 'Enhanced';
+                } else if (fastingHours >= 8) {
+                    clarity = 'Good';
+                    energy = 'Stabilizing';
+                    focus = 'Good';
+                } else if (fastingHours >= 4) {
+                    clarity = 'Moderate';
+                    energy = 'Adjusting';
+                    focus = 'Fair';
+                }
+                
+                document.getElementById('clarity-level').textContent = clarity;
+                document.getElementById('energy-level').textContent = energy;
+                document.getElementById('focus-level').textContent = focus;
+            }
+
+            startTimer() {
+                // Update every second
+                this.fastingTimer = setInterval(() => {
+                    this.updateFastingData();
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.fastingTimer) {
+                    clearInterval(this.fastingTimer);
+                    this.fastingTimer = null;
+                }
+            }
+        }
+
+        // Initialize fasting tracker when page loads
+        let fastingTracker;
+        document.addEventListener('DOMContentLoaded', function() {
+            fastingTracker = new FastingTracker();
+        });
+
+        // Clean up timer when page unloads
+        window.addEventListener('beforeunload', function() {
+            if (fastingTracker) {
+                fastingTracker.stopTimer();
+            }
+        });
+    </script>
+
+    <!-- Quick Log Modal -->
+    <div id="quickLogModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('quickLogModal').style.display='none'">&times;</span>
+            <h2>Quick Log Output</h2>
+            <form id="quickLogForm">
+                <div class="form-group">
+                    <label for="outputType">Type:</label>
+                    <select id="outputType" name="type" required>
+                        <option value="micro">Micro Release</option>
+                        <option value="major">Major Release</option>
+                        <option value="vst3">VST3 Plugin</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="outputTitle">Title:</label>
+                    <input type="text" id="outputTitle" name="title" required>
+                </div>
+                
+                <div class="form-group" id="categoryGroup">
+                    <label for="outputCategory">Category:</label>
+                    <select id="outputCategory" name="category">
+                        <option value="beat">Beat</option>
+                        <option value="visual">Visual</option>
+                        <option value="lore">Lore</option>
+                        <option value="track">Track</option>
+                        <option value="video">Video</option>
+                        <option value="plugin">Plugin</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="outputDescription">Description:</label>
+                    <textarea id="outputDescription" name="description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="document.getElementById('quickLogModal').style.display='none'">Cancel</button>
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

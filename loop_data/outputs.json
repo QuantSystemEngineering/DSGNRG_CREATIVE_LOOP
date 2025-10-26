@@ -1,0 +1,50 @@
+{
+  "micro_1": {
+    "title": "Sector 7 Echoes",
+    "output_type": "micro",
+    "category": "beat",
+    "file_path": null,
+    "description": "Ambient beat inspired by urban exploration",
+    "release_date": "2025-10-26T03:33:50.904468",
+    "tags": []
+  },
+  "major_1": {
+    "title": "Digital Archaeology EP",
+    "output_type": "major",
+    "category": "track",
+    "file_path": null,
+    "description": "Full EP exploring themes of data ghosts and forgotten digital spaces",
+    "release_date": "2025-10-26T03:35:45.962141",
+    "tags": []
+  },
+  "vst3_1": {
+    "title": "NeuroMod VST3 Chord Detector",
+    "output_type": "vst3",
+    "category": "plugin",
+    "file_path": null,
+    "description": "C++, JUCE.\n\n1. retouch the logo, crop/fix the logo size. ",
+    "release_date": "2025-10-26T04:20:25.802097",
+    "tags": [],
+    "modified_date": "2025-10-26T15:52:16.892278"
+  },
+  "vst3_2": {
+    "title": "NeuroMod Spectral BPM Detector",
+    "output_type": "vst3",
+    "category": "plugin",
+    "file_path": null,
+    "description": "C++, JUCE.\n\n1. multiband BPM detection?\n2. test against another free VST BPM detector plugin.",
+    "release_date": "2025-10-26T04:34:13.316736",
+    "tags": [],
+    "modified_date": "2025-10-26T15:53:24.691652"
+  },
+  "vst3_3": {
+    "title": "NeuroMod Randomizer VST3 plugin",
+    "output_type": "vst3",
+    "category": "plugin",
+    "file_path": null,
+    "description": "C++, JUCE.\n\n1. write documentation",
+    "release_date": "2025-10-26T04:49:43.906076",
+    "tags": [],
+    "modified_date": "2025-10-26T15:54:44.268470"
+  }
+}
