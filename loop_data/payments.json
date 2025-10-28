@@ -1,0 +1,82 @@
+{
+  "payments": [
+    {
+      "id": "1",
+      "name": "Adobe Creative Cloud Pro",
+      "amount": 0.0,
+      "category": "creative",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00",
+      "updated_at": "2025-10-26T22:49:16.512309"
+    },
+    {
+      "id": "2",
+      "name": "AI music creator",
+      "amount": 0.0,
+      "category": "creative",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00",
+      "updated_at": "2025-10-26T22:49:20.727324"
+    },
+    {
+      "id": "3",
+      "name": "AI video creator",
+      "amount": 0.0,
+      "category": "creative",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00",
+      "updated_at": "2025-10-26T22:49:24.463600"
+    },
+    {
+      "id": "4",
+      "name": "DropBox Storage",
+      "amount": 12.0,
+      "category": "services",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00",
+      "updated_at": "2025-10-26T22:45:17.041838"
+    },
+    {
+      "id": "5",
+      "name": "GitHub",
+      "amount": 10.0,
+      "category": "services",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00",
+      "updated_at": "2025-10-26T22:45:37.872712"
+    },
+    {
+      "id": "6",
+      "name": "Internet & TV",
+      "amount": 13.0,
+      "category": "services",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00",
+      "updated_at": "2025-10-26T22:50:57.245650"
+    },
+    {
+      "id": "7",
+      "name": "Gym Membership",
+      "amount": 50.0,
+      "category": "lifestyle",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00"
+    },
+    {
+      "id": "8",
+      "name": "Supplements",
+      "amount": 40.0,
+      "category": "lifestyle",
+      "notes": "",
+      "created_at": "2025-10-26T12:00:00"
+    },
+    {
+      "id": "9",
+      "name": "A1 Phone Bill",
+      "amount": 83.0,
+      "category": "lifestyle",
+      "notes": "",
+      "created_at": "2025-10-26T22:46:43.166952"
+    }
+  ]
+}

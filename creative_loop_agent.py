@@ -140,10 +140,14 @@ class CreativeLoopAgent:
     
     # INPUT METHODS
     def log_sonic_sketch(self, duration_minutes: int, description: str, 
-                        audio_file: str = None, tags: List[str] = None) -> str:
+                        audio_file: str = None, tags: List[str] = None, date: str = None) -> str:
         """Log a daily sonic sketch"""
         sketch = SonicSketch(duration_minutes, description, audio_file, tags or [])
-        today = datetime.date.today().isoformat()
+        # Allow logging for a specific date (YYYY-MM-DD) when provided, otherwise use today
+        if date:
+            today = date
+        else:
+            today = datetime.date.today().isoformat()
         
         inputs = self._load_data(self.inputs_file)
         if today not in inputs:
@@ -514,6 +518,167 @@ Consistency is key! Keep feeding the loop daily.
             current_date -= datetime.timedelta(days=1)
         
         return streak
+
+    # TASK MANAGEMENT
+    def get_tasks(self, task_type: str) -> List[Dict]:
+        """Get all tasks for a specific type (weekly/monthly)"""
+        tasks_file = self.data_dir / f"{task_type}_tasks.json"
+        return self._load_data(tasks_file).get("tasks", [])
+    
+    def add_task(self, task_type: str, text: str, priority: str = "medium") -> Dict:
+        """Add a new task"""
+        tasks_file = self.data_dir / f"{task_type}_tasks.json"
+        tasks_data = self._load_data(tasks_file)
+        
+        if "tasks" not in tasks_data:
+            tasks_data["tasks"] = []
+        
+        # Generate unique ID
+        task_id = str(len(tasks_data["tasks"]) + 1)
+        while any(task["id"] == task_id for task in tasks_data["tasks"]):
+            task_id = str(int(task_id) + 1)
+        
+        new_task = {
+            "id": task_id,
+            "text": text,
+            "completed": False,
+            "priority": priority,
+            "created_at": datetime.datetime.now().isoformat(),
+            "completed_at": None
+        }
+        
+        tasks_data["tasks"].append(new_task)
+        self._save_data(tasks_file, tasks_data)
+        
+        return new_task
+    
+    def update_task(self, task_type: str, task_id: str, updates: Dict) -> Dict:
+        """Update a task (toggle completion, edit text, etc.)"""
+        tasks_file = self.data_dir / f"{task_type}_tasks.json"
+        tasks_data = self._load_data(tasks_file)
+        
+        if "tasks" not in tasks_data:
+            tasks_data["tasks"] = []
+        
+        # Find and update task
+        for task in tasks_data["tasks"]:
+            if task["id"] == task_id:
+                if "completed" in updates:
+                    task["completed"] = updates["completed"]
+                    task["completed_at"] = datetime.datetime.now().isoformat() if updates["completed"] else None
+                if "text" in updates:
+                    task["text"] = updates["text"]
+                if "priority" in updates:
+                    task["priority"] = updates["priority"]
+                
+                self._save_data(tasks_file, tasks_data)
+                return task
+        
+        raise ValueError(f"Task with ID {task_id} not found")
+    
+    def delete_task(self, task_type: str, task_id: str) -> None:
+        """Delete a task"""
+        tasks_file = self.data_dir / f"{task_type}_tasks.json"
+        tasks_data = self._load_data(tasks_file)
+        
+        if "tasks" not in tasks_data:
+            tasks_data["tasks"] = []
+        
+        # Remove task
+        original_length = len(tasks_data["tasks"])
+        tasks_data["tasks"] = [task for task in tasks_data["tasks"] if task["id"] != task_id]
+        
+        if len(tasks_data["tasks"]) == original_length:
+            raise ValueError(f"Task with ID {task_id} not found")
+        
+        self._save_data(tasks_file, tasks_data)
+
+    # Payment Management Methods
+    def get_payments(self) -> List[dict]:
+        """Get all monthly payments"""
+        payments_file = Path('loop_data/payments.json')
+        if not payments_file.exists():
+            # Return default payments if file doesn't exist
+            default_payments = [
+                {'id': '1', 'name': 'Ableton Live Suite', 'amount': 20.00, 'category': 'creative', 'notes': ''},
+                {'id': '2', 'name': 'Plugin Subscriptions', 'amount': 30.00, 'category': 'creative', 'notes': ''},
+                {'id': '3', 'name': 'Sample Libraries', 'amount': 15.00, 'category': 'creative', 'notes': ''},
+                {'id': '4', 'name': 'Cloud Storage', 'amount': 10.00, 'category': 'services', 'notes': ''},
+                {'id': '5', 'name': 'Streaming Platforms', 'amount': 25.00, 'category': 'services', 'notes': ''},
+                {'id': '6', 'name': 'Domain & Hosting', 'amount': 12.00, 'category': 'services', 'notes': ''},
+                {'id': '7', 'name': 'Gym Membership', 'amount': 50.00, 'category': 'lifestyle', 'notes': ''},
+                {'id': '8', 'name': 'Supplements', 'amount': 40.00, 'category': 'lifestyle', 'notes': ''}
+            ]
+            # Save default payments
+            self._save_data(payments_file, {'payments': default_payments})
+            return default_payments
+        
+        payments_data = self._load_data(payments_file)
+        return payments_data.get('payments', [])
+
+    def add_payment(self, name: str, amount: float, category: str, notes: str = '') -> str:
+        """Add a new payment"""
+        payments_file = Path('loop_data/payments.json')
+        payments_data = self._load_data(payments_file) if payments_file.exists() else {'payments': []}
+        
+        # Generate new ID
+        existing_ids = [int(p['id']) for p in payments_data['payments'] if p['id'].isdigit()]
+        new_id = str(max(existing_ids, default=0) + 1)
+        
+        new_payment = {
+            'id': new_id,
+            'name': name,
+            'amount': float(amount),
+            'category': category,
+            'notes': notes,
+            'created_at': datetime.datetime.now().isoformat()
+        }
+        
+        payments_data['payments'].append(new_payment)
+        self._save_data(payments_file, payments_data)
+        
+        print(f"✅ Payment '{name}' added successfully")
+        return new_id
+
+    def update_payment(self, payment_id: str, name: str, amount: float, category: str, notes: str = ''):
+        """Update an existing payment"""
+        payments_file = Path('loop_data/payments.json')
+        if not payments_file.exists():
+            raise ValueError("No payments found")
+        
+        payments_data = self._load_data(payments_file)
+        payments = payments_data['payments']
+        
+        payment = next((p for p in payments if p['id'] == payment_id), None)
+        if not payment:
+            raise ValueError(f"Payment with ID {payment_id} not found")
+        
+        # Update payment fields
+        payment['name'] = name
+        payment['amount'] = float(amount)
+        payment['category'] = category
+        payment['notes'] = notes
+        payment['updated_at'] = datetime.datetime.now().isoformat()
+        
+        self._save_data(payments_file, payments_data)
+        print(f"✅ Payment '{name}' updated successfully")
+
+    def delete_payment(self, payment_id: str):
+        """Delete a payment"""
+        payments_file = Path('loop_data/payments.json')
+        if not payments_file.exists():
+            raise ValueError("No payments found")
+        
+        payments_data = self._load_data(payments_file)
+        payments = payments_data['payments']
+        
+        payment = next((p for p in payments if p['id'] == payment_id), None)
+        if not payment:
+            raise ValueError(f"Payment with ID {payment_id} not found")
+        
+        payments_data['payments'] = [p for p in payments if p['id'] != payment_id]
+        self._save_data(payments_file, payments_data)
+        print(f"✅ Payment '{payment['name']}' deleted successfully")
 
 # CLI Interface
 def main():

@@ -1,23 +1,71 @@
 {
   "2025-10": {
-    "26": {
-      "outputs": [
-        {
-          "type": "vst3",
-          "title": "Test Calendar Plugin",
-          "description": "Testing calendar integration"
-        },
-        {
-          "type": "vst3",
-          "title": "test",
-          "description": ""
-        }
-      ],
+    "27": {
       "inputs": [
         {
           "type": "sonic_sketch",
           "duration": 25,
           "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 25,
+          "description": "Testing calendar day loading"
+        },
+        {
+          "type": "sonic_sketch",
+          "duration": 10,
+          "description": "test removal"
         }
       ]
     }

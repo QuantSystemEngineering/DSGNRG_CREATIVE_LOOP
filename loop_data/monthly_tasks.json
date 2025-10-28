@@ -1,0 +1,68 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "text": "Release 1 major track/single/EP",
+      "completed": false,
+      "priority": "high",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": null
+    },
+    {
+      "id": "2",
+      "text": "Build complete VST3 plugin suite (16 plugins)",
+      "completed": false,
+      "priority": "high",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": null
+    },
+    {
+      "id": "3",
+      "text": "Establish consistent brand presence",
+      "completed": false,
+      "priority": "medium",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": null
+    },
+    {
+      "id": "4",
+      "text": "Collaborate with 2 other artists",
+      "completed": false,
+      "priority": "low",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": null
+    },
+    {
+      "id": "5",
+      "text": "Set up professional home studio",
+      "completed": true,
+      "priority": "high",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": "2025-10-26T18:58:58.304703"
+    },
+    {
+      "id": "6",
+      "text": "Build email list of 100 subscribers",
+      "completed": false,
+      "priority": "medium",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": null
+    },
+    {
+      "id": "7",
+      "text": "Document creative process for content",
+      "completed": false,
+      "priority": "high",
+      "created_at": "2025-10-26T12:00:00",
+      "completed_at": null
+    },
+    {
+      "id": "8",
+      "text": "Make The Saturn Silver Ring",
+      "completed": false,
+      "priority": "high",
+      "created_at": "2025-10-26T18:54:55.882550",
+      "completed_at": null
+    }
+  ]
+}
